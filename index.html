@@ -96,15 +96,6 @@
 
   .checklist-group{margin-bottom:16px;}
   .checklist-group h3{font-size:14px; color:var(--navy); margin:0 0 8px;}
-
-  .city-heading{
-    display:flex; align-items:center; gap:8px; font-size:16px; font-weight:700;
-    color:#fff; background:linear-gradient(135deg,var(--navy),var(--navy-dark));
-    padding:10px 14px; border-radius:10px; margin:20px 0 12px;
-  }
-  .city-heading:first-of-type{margin-top:4px;}
-  .city-sub{font-size:12.5px; color:var(--muted); margin:-6px 0 12px;}
-  .card .opt{font-size:12px; font-weight:700; color:var(--accent); display:inline-block; margin-top:6px;}
   label.chk{
     display:flex; align-items:flex-start; gap:10px; background:#fff;
     border:1px solid var(--line); border-radius:10px; padding:11px 12px;
@@ -142,7 +133,6 @@
 <nav class="tabs">
   <a href="#itineraire">🗓️ Itinéraire</a>
   <a href="#croisiere">🛳️ Croisière</a>
-  <a href="#decouvrir">🚶 Découvrir</a>
   <a href="#cartes">🗺️ Cartes</a>
   <a href="#avant">✅ À faire</a>
   <a href="#emporter">🧳 À emporter</a>
@@ -163,179 +153,6 @@
   <div id="cruise-list"></div>
   <p class="lead" style="margin-top:10px;">⚠️ Une confirmation de mai indique une 2<sup>e</sup> réservation Cagney's Steakhouse le 1<sup>er</sup> sept. à 20h, absente du résumé plus récent (juillet) — à vérifier dans votre compte NCL.</p>
   <p class="lead">⏱️ Le Portugal est à l'heure GMT (1h de moins qu'en Espagne) ; le navire ajuste l'horloge avant Portimão. Vérifiez l'heure locale à bord avant chaque excursion.</p>
-</section>
-
-<section id="decouvrir">
-  <h2>Itinéraires de découverte</h2>
-  <p class="lead">Suggestions jour par jour pour explorer Barcelone, Porto et Lisbonne, selon vos dates de séjour. Les incontournables demandant réservation (musées, caves à vin) sont signalés — à réserver en ligne à l'avance.</p>
-
-  <div class="city-heading">🏛️ Barcelone — 23 au 29 août (7 jours)</div>
-  <p class="city-sub">Séjour le plus long : de quoi combiner grands monuments, quartiers à flâner et une excursion.</p>
-
-  <div class="card">
-    <div class="badge">Dim. 23 août</div>
-    <div class="title">Arrivée · Quartier Gothique</div>
-    <ul>
-      <li>Installation à l'Airbnb (arrivée en après-midi)</li>
-      <li>Balade dans le Barri Gòtic : Cathédrale de Barcelone, Plaça Reial</li>
-      <li>La Rambla jusqu'au marché de la Boqueria</li>
-      <li>Dîner tapas dans le quartier du Born</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Lun. 24 août</div>
-    <div class="title">Sagrada Família · Eixample</div>
-    <ul>
-      <li>Sagrada Família <span class="opt">🎟️ billet daté à réserver</span></li>
-      <li>Casa Batlló et Casa Milà (La Pedrera) sur le Passeig de Gràcia</li>
-      <li>Fin d'après-midi shopping ou terrasse sur le Passeig de Gràcia</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Mar. 25 août</div>
-    <div class="title">Park Güell · Gràcia</div>
-    <ul>
-      <li>Park Güell tôt le matin <span class="opt">🎟️ billet horodaté</span></li>
-      <li>Quartier de Gràcia : petites places ombragées, cafés locaux</li>
-      <li>Bunkers del Carmel en fin de journée pour la vue au coucher du soleil (marche ou taxi)</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Mer. 26 août</div>
-    <div class="title">Montjuïc</div>
-    <ul>
-      <li>Château de Montjuïc, accessible en téléphérique ou funiculaire</li>
-      <li>Musée national d'art de Catalogne (MNAC) et ses jardins</li>
-      <li>Poble Espanyol (village-musée à ciel ouvert)</li>
-      <li>Font Màgica en soirée si un spectacle est prévu ce jour-là</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Jeu. 27 août</div>
-    <div class="title">Plage · Le Born</div>
-    <ul>
-      <li>Matinée plage à Barceloneta</li>
-      <li>Promenade en bord de mer jusqu'au Port Olímpic</li>
-      <li>Après-midi dans le quartier du Born : Musée Picasso, Passeig del Born</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Ven. 28 août</div>
-    <div class="title">Excursion au choix</div>
-    <ul>
-      <li><b>Option nature :</b> journée à Montserrat — train + funiculaire, monastère et panoramas de montagne</li>
-      <li><b>Option urbaine :</b> visite du Camp Nou (stade du FC Barcelone) puis après-midi libre</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Sam. 29 août</div>
-    <div class="title">Derniers instants à Barcelone</div>
-    <ul>
-      <li>Matinée libre : marché de la Boqueria pour souvenirs gourmands</li>
-      <li>Préparation des valises pour l'embarquement du lendemain</li>
-      <li>Dernier repas à Barcelone au choix</li>
-    </ul>
-  </div>
-
-  <div class="city-heading">🍷 Porto — 6 au 11 septembre (5 nuits)</div>
-  <p class="city-sub">Arrivée en après-midi après la route depuis Lisbonne ; départ le matin du 11 vers Lisbonne.</p>
-
-  <div class="card">
-    <div class="badge">Dim. 6 sept.</div>
-    <div class="title">Arrivée · Ribeira</div>
-    <ul>
-      <li>Route Lisbonne → Porto, installation à l'hôtel</li>
-      <li>Promenade en soirée sur les quais de la Ribeira</li>
-      <li>Vue sur le pont Dom Luís I, dîner face au fleuve</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Lun. 7 sept.</div>
-    <div class="title">Centre historique</div>
-    <ul>
-      <li>Livraria Lello <span class="opt">🎟️ billet en ligne recommandé</span></li>
-      <li>Tour des Clérigos et sa vue sur la ville</li>
-      <li>Gare de São Bento (azulejos) et Cathédrale (Sé do Porto)</li>
-      <li>Marché do Bolhão</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Mar. 8 sept.</div>
-    <div class="title">Vila Nova de Gaia · Douro</div>
-    <ul>
-      <li>Traversée à pied du pont Dom Luís I</li>
-      <li>Visite d'une cave de Porto avec dégustation (Graham's, Ferreira, Sandeman…)</li>
-      <li>Croisière des 6 ponts sur le Douro en après-midi</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Mer. 9 sept.</div>
-    <div class="title">Excursion au choix</div>
-    <ul>
-      <li><b>Option vignobles :</b> journée dans la vallée du Douro (train ou bateau, paysages et dégustation de vin)</li>
-      <li><b>Option détente :</b> Foz do Douro (plages), Parc de la ville, Casa da Música</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Jeu. 10 sept.</div>
-    <div class="title">Palácio da Bolsa · dernière soirée</div>
-    <ul>
-      <li>Palácio da Bolsa et Igreja de São Francisco</li>
-      <li>Shopping et cafés dans le centre</li>
-      <li>Dernier dîner à Porto au bord du fleuve</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Ven. 11 sept.</div>
-    <div class="title">Départ vers Lisbonne</div>
-    <ul>
-      <li>Matinée libre : derniers cafés, Mercado do Bolhão</li>
-      <li>Route Porto → Lisbonne, installation au Dare Lisbon River</li>
-    </ul>
-  </div>
-
-  <div class="city-heading">🌊 Lisbonne (retour) — 11 au 13 septembre (2 nuits)</div>
-  <p class="city-sub">Court séjour final avant le vol retour du 13 à 8h15 — priorité à Belém et à l'Alfama.</p>
-
-  <div class="card">
-    <div class="badge">Ven. 11 sept.</div>
-    <div class="title">Alfama · fado</div>
-    <ul>
-      <li>Installation au Dare Lisbon River en fin d'après-midi</li>
-      <li>Balade dans l'Alfama, miradouros de Santa Luzia et Portas do Sol</li>
-      <li>Dîner fado dans l'Alfama <span class="opt">🎟️ réservation conseillée</span></li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Sam. 12 sept.</div>
-    <div class="title">Belém · Baixa-Chiado</div>
-    <ul>
-      <li>10h30 : retour de la voiture de location chez Europcar</li>
-      <li>Tour de Belém, Monastère des Jerónimos, pastéis de Belém (pâtisserie originale)</li>
-      <li>Après-midi : Praça do Comércio, Elevador de Santa Justa, Rua Augusta</li>
-      <li>Tramway 28 en fin de journée pour un dernier tour de ville</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="badge">Dim. 13 sept.</div>
-    <div class="title">Vol retour</div>
-    <ul>
-      <li>Départ très matinal de l'hôtel (vol à 8h15) — rien de prévu ce jour-là</li>
-    </ul>
-  </div>
 </section>
 
 <section id="cartes">
