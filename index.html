@@ -77,6 +77,17 @@
   }
   .mapcard .addr{font-size:13px; color:var(--muted); margin:2px 0 0;}
 
+  .routemap{
+    width:100%; height:340px; border-radius:10px; margin-top:4px;
+    border:1px solid var(--line); background:var(--pale2);
+  }
+  .routemap .num-icon{
+    background:var(--navy); color:#fff; width:24px; height:24px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+    border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  }
+  .routemap .num-icon.day2{background:var(--accent);}
+
   details.info{
     background:#fff; border:1px solid var(--line); border-radius:12px;
     margin-bottom:10px; overflow:hidden;
@@ -128,7 +139,22 @@
     opacity:0.92;
   }
   footer{text-align:center; font-size:11.5px; color:var(--muted); padding:18px 20px 30px;}
+
+  .doc-guide{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; font-size:14px; line-height:1.55; color:#334354;}
+  .doc-guide h3.doc-h1{
+    color:var(--navy); font-size:17px; margin:26px 0 10px; padding-bottom:6px;
+    border-bottom:2px solid var(--pale);
+  }
+  .doc-guide h3.doc-h1:first-child{margin-top:0;}
+  .doc-guide h4.doc-h2{color:var(--accent); font-size:14.5px; margin:16px 0 6px;}
+  .doc-guide p{margin:0 0 10px;}
+  .doc-guide p.doc-caption{font-size:12.5px; color:var(--muted); margin:-4px 0 12px;}
+  .doc-guide ul{margin:4px 0 10px; padding-left:20px;}
+  .doc-guide li{margin-bottom:4px;}
+  .doc-guide-note{font-size:12.5px; color:var(--muted); margin:-6px 0 14px;}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -147,6 +173,7 @@
   <a href="#avant">✅ À faire</a>
   <a href="#emporter">🧳 À emporter</a>
   <a href="#infos">ℹ️ Bon à savoir</a>
+  <a href="#guide-complet">📖 Guide Barcelone</a>
 </nav>
 
 <main>
@@ -173,24 +200,22 @@
   <p class="city-sub">Séjour le plus long : de quoi combiner grands monuments, quartiers à flâner et une excursion.</p>
 
   <div class="card">
-    <div class="badge">Dim. 23 août</div>
-    <div class="title">Arrivée · Quartier Gothique</div>
+    <div class="badge">Lun. 24 août</div>
+    <div class="title">L'Eixample & l'œuvre de Gaudí</div>
     <ul>
-      <li>Installation à l'Airbnb (arrivée en après-midi)</li>
-      <li>Balade dans le Barri Gòtic : Cathédrale de Barcelone, Plaça Reial</li>
-      <li>La Rambla jusqu'au marché de la Boqueria</li>
-      <li>Dîner tapas dans le quartier du Born</li>
+      <li><b>Casa Batlló</b> — Passeig de Gràcia <span class="opt">🎟️ billet daté conseillé, ~26-35 €</span> — chef-d'œuvre de 1904-06 surnommé « Casa dels Ossos » (maison des os) pour ses balcons en forme de crânes et colonnes façon ossements ; façade ondulante inspirée du monde aquatique, toit en dos de dragon coloré</li>
+      <li><b>Casa Milà (La Pedrera)</b> — à moins de 500 m, autre œuvre de Gaudí (1906-1910) classée UNESCO, surnommée « la Pedrera » (la carrière) pour sa façade blanche aux lignes ondulées évoquant la roche ; toit-terrasse aux cheminées sculpturales offrant une vue superbe sur la ville</li>
+      <li>Déjeuner et flânerie sur le Passeig de Gràcia (avenue de 3 km bordée de boutiques de luxe)</li>
+      <li><b>Palais de la Musique Catalane</b> <span class="opt">🎟️ visite guidée à réserver à l'avance</span> — salle de concert moderniste de 1908 signée Domènech i Montaner, aussi spectaculaire à l'extérieur (façade sculptée, mosaïques) qu'à l'intérieur avec sa coupole de verre inversée et son acoustique remarquable</li>
+      <li>Fin d'après-midi optionnelle : Casa Vicens à Gràcia (première grande œuvre de Gaudí, 1883-85, façade en céramique colorée aux influences orientalisantes) si le temps le permet</li>
+      <li>⚠️ Le Musée Picasso est <b>fermé le lundi</b> — sa visite a été reportée au vendredi 28 août</li>
     </ul>
   </div>
 
   <div class="card">
-    <div class="badge">Lun. 24 août</div>
-    <div class="title">Eixample · Casa Batlló</div>
-    <ul>
-      <li>Casa Batlló et Casa Milà (La Pedrera) sur le Passeig de Gràcia</li>
-      <li>Quartier du Born : Musée Picasso, Passeig del Born</li>
-      <li>Fin d'après-midi shopping ou terrasse sur le Passeig de Gràcia</li>
-    </ul>
+    <div class="title">🗺️ Trajet suggéré depuis l'Airbnb</div>
+    <p style="font-size:12.5px;color:var(--muted);margin:2px 0 8px;">Numéros dans l'ordre de visite du 24 août.</p>
+    <div id="route-map-23-24" class="routemap"></div>
   </div>
 
   <div class="card">
@@ -225,9 +250,10 @@
 
   <div class="card">
     <div class="badge">Ven. 28 août</div>
-    <div class="title">Journée libre · préparatifs</div>
+    <div class="title">Musée Picasso · journée libre</div>
     <ul>
-      <li>Journée tranquille : quartiers à flâner, achats de dernière minute</li>
+      <li>Musée Picasso (Born) <span class="opt">🎟️ billet en ligne conseillé, ~14-15 €</span> — collection la plus complète au monde sur ses années de formation, logée dans 5 palais médiévaux ; compter 1h30-2h</li>
+      <li>Reste de la journée tranquille : quartiers à flâner, achats de dernière minute</li>
       <li>Bunkers del Carmel en fin de journée pour la vue au coucher du soleil (marche ou taxi)</li>
       <li>Repos avant la grosse journée de visites du lendemain</li>
     </ul>
@@ -442,6 +468,434 @@
       <li>Consultez le bulletin quotidien dans l'app Norwegian Cruise Line, surtout le 4 septembre (seule journée sans réservation)</li>
     </ul></div>
   </details>
+</section>
+
+<section id="guide-complet">
+  <h2>📖 Guide complet — Barcelone, Costa Brava et autour</h2>
+  <p class="lead">Document de référence fourni par Normand — pour toutes les envies d'exploration, y compris au-delà de l'itinéraire prévu (Costa Brava, Gérone, Montserrat, Sitges, Costa Daurada...).</p>
+  <div class="doc-guide">
+<p class="doc-caption"><em>Guide organisé par thème — Barcelone, la Costa Brava, Gérone, Montserrat et Sitges</em></p>
+<h3 class="doc-h1">Barcelone en un coup d'œil</h3>
+<p>Capitale de la Catalogne et deuxième ville d'Espagne, Barcelone doit son charme à un mélange unique d'architecture moderniste (Gaudí en tête), de quartiers historiques, de plages en plein cœur de ville et d'une gastronomie réputée. La ville se visite très bien à pied, complétée par un métro efficace ; comptez au moins 3 jours pour voir l'essentiel, une semaine pour combiner la ville avec la Costa Brava, Gérone et Montserrat.</p>
+<p class="doc-caption"><em>La Sagrada Família, chef-d'œuvre inachevé d'Antoni Gaudí</em></p>
+<h3 class="doc-h1">1. Les quartiers de Barcelone</h3>
+<h4 class="doc-h2">Barri Gòtic (quartier gothique)</h4>
+<p>Cœur ancien de la ville, un dédale de ruelles médiévales abritant vestiges romains, palais et petites places secrètes. La cathédrale Sainte-Croix (Sainte-Eulalie) en est le monument phare, avec son cloître et ses terrasses offrant une vue sur la ville. Ne manquez pas la Plaça Sant Jaume (hôtel de ville et palais de la Generalitat), la Plaça del Rei et la Plaça Reial, ainsi que la ruelle du Bisbe avec son petit pont suspendu très photographié. La Plaça Sant Felip Neri, plus discrète, porte encore les impacts de bombardements de la Guerre civile sur ses murs.</p>
+<p class="doc-caption"><em>Les ruelles du quartier gothique de Barcelone</em></p>
+<h4 class="doc-h2">El Born (La Ribera)</h4>
+<p>Voisin du Barri Gòtic mais à l'ambiance plus moderne et branchée : bars élégants, boutiques de mode et galeries d'art dans un lacis de ruelles pavées. On y trouve le musée Picasso (installé dans cinq palais gothiques du XIIIe-XIVe siècle, entrée gratuite le premier dimanche du mois et chaque jeudi de 18h à 21h30), la basilique Santa Maria del Mar (« cathédrale de la mer », chef-d'œuvre gothique catalan) et le Palais de la Musique Catalane, joyau moderniste signé Domènech i Montaner.</p>
+<p class="doc-caption"><em>Une place du quartier animé d'El Born</em></p>
+<h4 class="doc-h2">L'Eixample et le Passeig de Gràcia</h4>
+<p>Quartier de « l'élargissement » du XIXe siècle, choisi par la bourgeoisie pour y bâtir ses demeures — c'est ici que se concentre l'essentiel de l'œuvre de Gaudí (Casa Batlló, Casa Milà) ainsi que la Sagrada Família. Le Passeig de Gràcia, célèbre avenue de 3 km bordée de boutiques de luxe, en est l'artère principale.</p>
+<h4 class="doc-h2">Gràcia</h4>
+<p>Ancien village indépendant absorbé par l'expansion de la ville, resté bohème et attachant : boutiques artisanales, cafés, ruelles fleuries. Sa Festa Major, en août, transforme les rues en décors thématiques élaborés. Proche du Parc Güell et de la Casa Vicens.</p>
+<p class="doc-caption"><em>Le quartier bohème de Gràcia</em></p>
+<h4 class="doc-h2">La Barceloneta</h4>
+<p>Ancien village de pêcheurs entre mer et port Olympique, aujourd'hui quartier animé avec sa grande plage (la plus fréquentée de la ville) et ses nombreux chiringuitos. Le Musée d'Histoire de Catalogne s'y trouve également.</p>
+<p class="doc-caption"><em>La plage et le quartier de la Barceloneta</em></p>
+<h4 class="doc-h2">El Raval</h4>
+<p>De l'autre côté de la Rambla par rapport au Barri Gòtic, quartier multiculturel en pleine transformation, avec le MACBA (musée d'art contemporain) et une intense scène street-art.</p>
+<h4 class="doc-h2">Montjuïc</h4>
+<p>Colline surplombant la ville, marquée par l'Exposition universelle de 1929 et les Jeux Olympiques de 1992 — voir section dédiée ci-dessous.</p>
+<h3 class="doc-h1">2. L'œuvre d'Antoni Gaudí</h3>
+<h4 class="doc-h2">La Sagrada Família</h4>
+<p>Commencée en 1882, cette basilique toujours inachevée est le monument le plus visité d'Espagne et un symbole absolu de Barcelone, classé à l'UNESCO. Ses 18 tours de hauteurs différentes et ses trois façades (Nativité, Passion, Gloire) racontent en pierre sculptée les grands épisodes bibliques, dans un style mêlant gothique et art nouveau. La façade de la Nativité, la plus ancienne, est particulièrement photogénique le matin ; l'intérieur, baigné par la lumière colorée des vitraux, est saisissant.</p>
+<ul>
+<li>Durée de visite : 45 min à 1h minimum — Réservation en ligne indispensable (sagradafamilia.org) pour éviter une longue attente</li>
+<li>Tarif indicatif : environ 26 € le billet simple</li>
+</ul>
+<h4 class="doc-h2">Le Parc Güell</h4>
+<p>Jardin conçu par Gaudí entre 1900 et 1914 pour un projet de cité-jardin qui ne verra finalement que 4 maisons construites sur la soixantaine prévue. Classé UNESCO, il enchante par son double escalier et sa salamandre en mosaïque à l'entrée, sa place du marché soutenue par 84 colonnes, et le fameux banc ondulé offrant une vue panoramique sur la ville depuis 60 m de dénivelé. La maison-musée de Gaudí, où il vécut, se visite également.</p>
+<p class="doc-caption"><em>Le Parc Güell et ses mosaïques colorées, chef-d'œuvre de Gaudí</em></p>
+<h4 class="doc-h2">La Casa Batlló</h4>
+<p>Œuvre de 1904-1906 sur le Passeig de Gràcia, surnommée « Casa dels Ossos » (maison des os) pour ses balcons en forme de crânes et ses colonnes façon ossements. Façade ondulante inspirée du monde aquatique, toit en dos de dragon coloré — l'une des créations les plus photographiées de Gaudí.</p>
+<p class="doc-caption"><em>La Casa Batlló et sa façade ondulante inspirée du monde marin</em></p>
+<h4 class="doc-h2">La Casa Milà (La Pedrera)</h4>
+<p>À moins de 500 m de la Casa Batlló, cette autre œuvre de Gaudí (1906-1910), surnommée « la Pedrera » (la carrière) pour sa façade blanche aux lignes ondulées évoquant la roche, est également classée UNESCO. Le toit-terrasse, peuplé de cheminées aux formes sculpturales, offre une vue superbe sur la ville.</p>
+<p class="doc-caption"><em>La Casa Milà, dite « la Pedrera », et son toit aux cheminées sculpturales</em></p>
+<h4 class="doc-h2">La Casa Vicens</h4>
+<p>Première grande œuvre de Gaudí (1883-1885), dans le quartier de Gràcia, moins connue mais tout aussi remarquable, avec sa façade en céramique colorée aux influences orientalisantes.</p>
+<h4 class="doc-h2">Le Palais Güell</h4>
+<p>Commandé par le mécène Eusebi Güell, ce palais du Raval (1886-1890) est l'une des œuvres les plus abouties de la première période de Gaudí, avec ses cheminées en mosaïque sur le toit-terrasse.</p>
+<h3 class="doc-h1">3. Autres monuments et sites emblématiques</h3>
+<h4 class="doc-h2">Le Palais de la Musique Catalane</h4>
+<p>Salle de concert moderniste construite en 1908 par Lluís Domènech i Montaner, aussi spectaculaire de l'extérieur (façade sculptée, mosaïques) que de l'intérieur, avec sa coupole de verre inversée et son acoustique remarquable. Concerts de jazz, classique et flamenco toute l'année ; réservez la visite guidée à l'avance pour éviter une longue attente.</p>
+<h4 class="doc-h2">La cathédrale Sainte-Croix et Sainte-Eulalie</h4>
+<p>Monument le plus emblématique du Barri Gòtic, de style gothique médiéval, avec chœur, chapelles, cloître (oies élevées en souvenir de la légende de sainte Eulalie) et petit musée de peinture. Entrée gratuite le matin ; environ 7 € l'après-midi.</p>
+<h4 class="doc-h2">La Plaça Reial et les Ramblas</h4>
+<p>La Rambla, célèbre avenue piétonne d'1,3 km reliant la Plaça de Catalunya au port, traverse cinq tronçons différents, animés d'artistes de rue et de kiosques — un incontournable malgré la foule, ne serait-ce que pour passer d'un quartier à l'autre. La Plaça Reial, à deux pas, est un lieu prisé pour écouter du flamenco en terrasse ; le Los Tarantos, tablao le plus ancien de la ville, s'y trouve.</p>
+<h4 class="doc-h2">Autres arrêts sur la Rambla</h4>
+<ul>
+<li>Grand Théâtre du Liceu — plus ancien théâtre lyrique de la ville</li>
+<li>Mosaïque de Miró — intégrée au pavement de la Rambla</li>
+<li>Palau de la Virreina — expositions temporaires</li>
+<li>Casa Bruno Cuadros — dite « maison des Parapluies », façade ornée d'un dragon</li>
+<li>Mirador de Colom — monument dédié à Christophe Colomb, à l'extrémité maritime de la Rambla, où l'on peut monter pour une vue sur le port</li>
+</ul>
+<h3 class="doc-h1">4. Musées</h3>
+<ul>
+<li>Musée Picasso — plus de 4 200 œuvres dans cinq palais gothiques du Born, don en grande partie de Jaume Sabartés, ami et secrétaire de l'artiste</li>
+<li>Fondation Joan Miró — sur la colline de Montjuïc, plus de 14 000 œuvres du peintre surréaliste catalan</li>
+<li>MNAC (Musée national d'art de Catalogne) — dans le Palais national de Montjuïc, plus de 250 000 œuvres d'art catalan du roman au XXe siècle</li>
+<li>Musée d'Histoire de Barcelone (MUHBA) — vestiges romains et médiévaux répartis sur plusieurs sites de la ville, dont la Plaça del Rei</li>
+<li>Musée maritime — dans les anciens chantiers navals royaux du XIIIe siècle, à Barceloneta</li>
+<li>MACBA — art contemporain, quartier du Raval</li>
+</ul>
+<h3 class="doc-h1">5. Montjuïc</h3>
+<p>Cette colline surplombant la ville et le port concentre plusieurs sites majeurs, marqués par l'Exposition universelle de 1929 et les Jeux Olympiques de 1992.</p>
+<p class="doc-caption"><em>Le château de Montjuïc et sa vue panoramique sur Barcelone</em></p>
+<ul>
+<li>Château de Montjuïc — forteresse dominant la ville, accessible par téléphérique, avec vue à 360°</li>
+<li>La Font Màgica (fontaine magique) — spectacle son, lumière et eau restauré pour les JO de 1992, entre la Plaça d'Espanya et le MNAC, spectaculaire en soirée</li>
+<li>Poble Espanyol — village espagnol miniature construit en 1929 pour l'Exposition universelle, réplique des architectures régionales du pays</li>
+<li>Jardins de Joan Brossa et jardins de Mossèn Costa i Llobera — le second, dédié aux cactus et plantes exotiques, jouit d'un microclimat particulier et d'une vue sur le port</li>
+<li>Anneau olympique et stade olympique — vestiges des JO de 1992</li>
+<li>Théâtre grec de Montjuïc — amphithéâtre en plein air nichés dans la verdure, spectacles l'été</li>
+</ul>
+<h3 class="doc-h1">6. Parcs et jardins</h3>
+<ul>
+<li>Parc de la Ciutadella — le plus grand espace vert du centre-ville, ancienne forteresse militaire, avec zoo, étang à barques et l'Arc de Triomf tout proche</li>
+<li>Parc del Laberint d'Horta — le plus ancien jardin public de la ville (XVIIIe siècle), célèbre pour son labyrinthe de cyprès</li>
+<li>Jardin botanique de Barcelone — sur Montjuïc, flore méditerranéenne</li>
+<li>Parc du Forum — vaste esplanade contemporaine en bord de mer, concerts et festivals</li>
+<li>Tibidabo — parc d'attractions centenaire perché sur la montagne du même nom, vue panoramique et manèges vintage</li>
+</ul>
+<h3 class="doc-h1">7. Les plages de Barcelone</h3>
+<ul>
+<li>Barceloneta — la plus fréquentée et animée, sculpteurs de sable, restaurants, discothèques</li>
+<li>Mar Bella — plage plus intime entre Nova Mar Bella et Bogatell, piste cyclable</li>
+<li>Nova Icaria — plage familiale et paisible, aires de jeux (beach-volley, ping-pong)</li>
+<li>Bogatell — plage plus naturelle, appréciée des joggeurs et cyclistes</li>
+<li>Sant Sebastià — la plus ancienne et la plus grande, près de l'hôtel W</li>
+</ul>
+<p>La qualité de l'eau est généralement classée « excellente » par l'Agence catalane de l'eau ; la meilleure période pour se baigner s'étend de juin à septembre.</p>
+<h3 class="doc-h1">8. Gastronomie et marchés</h3>
+<h4 class="doc-h2">Le marché de la Boqueria</h4>
+<p>Le marché couvert le plus emblématique de la ville, en plein sur la Rambla : étals colorés de fruits, poissons, jambon ibérique, épices. Très touristique mais incontournable pour un jus de fruits frais ou une dégustation de tapas ; mieux vaut y passer en début d'après-midi pour profiter des étals sans trop de foule (fermeture à 20h).</p>
+<h4 class="doc-h2">Spécialités catalanes</h4>
+<ul>
+<li>Pa amb tomàquet — pain grillé frotté à la tomate et à l'huile d'olive, base de nombreux repas</li>
+<li>Crema catalana — dessert proche de la crème brûlée</li>
+<li>Fideuà — variante catalane de la paella à base de vermicelles</li>
+<li>Calçots — oignons doux grillés, spécialité d'hiver servie avec une sauce romesco</li>
+</ul>
+<h4 class="doc-h2">Bonnes adresses</h4>
+<ul>
+<li>Cerveseria Catalana (236 Mallorca) — bonnes tapas à petit prix</li>
+<li>Granja Viader (4-6 Xucla) — institution du chocolat chaud depuis plus d'un siècle</li>
+<li>El Xampanyet et La Puntual (quartier du Born) — bodegas à tapas réputées</li>
+<li>El Atril (Carrer dels Carders, 23) — petit restaurant chaleureux, bien noté</li>
+<li>Menus « midi » — la plupart des restaurants proposent entrée + plat + dessert + boisson pour 13 à 15 € environ, une option économique à ne pas négliger</li>
+</ul>
+<h4 class="doc-h2">Marché dels Encants</h4>
+<p>L'un des plus anciens marchés d'Europe (existait déjà au XIVe siècle), aujourd'hui installé dans un bâtiment ultramoderne près de la Tour Agbar. Plus de 300 stands, et seul marché d'Europe à conserver la tradition des enchères (lundi, mercredi, vendredi matin).</p>
+<h3 class="doc-h1">9. Trésors cachés et Barcelone insolite</h3>
+<ul>
+<li>Les Bunkers del Carmel (Turó de la Rovira) — anciennes batteries antiaériennes de la Guerre civile, offrant le plus beau panorama à 360° sur la ville, de la Sagrada Família au littoral ; accès facile et gratuit</li>
+<li>Plaça Sant Felip Neri — petite place intimiste du Barri Gòtic dont les murs de l'église portent encore les impacts d'un bombardement de la Guerre civile</li>
+<li>Recinte Modernista de Sant Pau — ancien hôpital moderniste près de la Sagrada Família, architecture remarquable et expositions</li>
+<li>La Model — ancienne prison emblématique de la ville, fermée en 2017, aujourd'hui lieu de mémoire ouvert au public le week-end (entrée gratuite)</li>
+<li>Street art — quartiers de Carmel, Gràcia, Poblenou et El Raval, itinéraires dédiés au street art contemporain</li>
+<li>Barcelone littéraire — ville de la Littérature reconnue par l'UNESCO ; carte littéraire éditée par la mairie recensant les lieux ayant inspiré de grands écrivains</li>
+</ul>
+<h3 class="doc-h1">10. Vie nocturne et flamenco</h3>
+<p>Bien que le flamenco soit historiquement plus andalou que catalan, Barcelone compte plusieurs tablaos réputés pour en profiter dans une ambiance intimiste, verre à la main. Los Tarantos, sur la Plaça Reial, est le plus ancien et le plus emblématique de la ville.</p>
+<p>Pour la vie nocturne, le Barri Gòtic et El Born concentrent bars à cocktails et ambiance festive, tandis que Poble Sec et Gràcia offrent une atmosphère plus locale.</p>
+<h3 class="doc-h1">11. Activités et sorties en famille</h3>
+<ul>
+<li>PortAventura World — à 1h de Barcelone, l'un des plus grands parcs d'attractions d'Europe, avec parc aquatique Caribe</li>
+<li>Tibidabo — parc d'attractions vintage en hauteur, vue imprenable sur la ville</li>
+<li>Zoo de Barcelone (Parc de la Ciutadella) et Aquarium (Port Vell)</li>
+<li>Camp Nou — stade du FC Barcelone, visite des vestiaires, du musée et des trophées</li>
+<li>Bosc Urbà — parcours d'aventure en hauteur (tyroliennes, ponts suspendus)</li>
+<li>Croisière en catamaran ou balade en bateau — depuis le port Olympique, avec vue sur le littoral et la skyline</li>
+<li>Vol en hélicoptère ou survol en avion — pour une vue aérienne de la ville et du Barri Gòtic</li>
+</ul>
+<h3 class="doc-h1">12. Shopping</h3>
+<ul>
+<li>Passeig de Gràcia — grandes maisons de luxe, à côté des œuvres de Gaudí</li>
+<li>Portal de l'Àngel et Rambla de Catalunya — rues commerçantes plus accessibles</li>
+<li>Centres commerciaux — Maremagnum (Port Vell), Diagonal Mar, L'Illa Diagonal, La Roca Village (outlet à environ 40 min du centre)</li>
+<li>Mercat dels Encants — antiquités, brocante et enchères</li>
+</ul>
+<h3 class="doc-h1">13. Où loger à Barcelone</h3>
+<ul>
+<li>Barri Gòtic / El Raval — au cœur de l'action, proche de la Rambla et de la Boqueria</li>
+<li>El Born — ambiance branchée, proche du musée Picasso et de la plage</li>
+<li>Eixample / Gràcia — pratique pour visiter les œuvres de Gaudí, quartiers résidentiels agréables</li>
+<li>El Medinaceli (ancien palais des Ducs de Medinaceli, classé monument historique) — au calme, à 200 m des Ramblas et à 1 km des plages, bon rapport qualité-prix</li>
+</ul>
+<h3 class="doc-h1">14. Itinéraire pour une escale de croisière (1 jour)</h3>
+<p>Barcelone est l'une des escales les plus appréciées de Méditerranée : compacte et bien desservie depuis le port, elle permet de voir l'essentiel en une seule journée.</p>
+<h4 class="doc-h2">Depuis le port</h4>
+<ul>
+<li>À pied — 15 à 20 min pour rejoindre le Barri Gòtic</li>
+<li>Bus touristique ou taxi — 10 à 15 min selon le trafic</li>
+</ul>
+<h4 class="doc-h2">Matinée : Gaudí et le modernisme</h4>
+<ul>
+<li>Sagrada Família (billets réservés à l'avance) — 45 min à 1h de visite</li>
+<li>Passeig de Gràcia — Casa Batlló et Casa Milà, au moins pour les façades</li>
+</ul>
+<h4 class="doc-h2">Déjeuner (1h)</h4>
+<p>Tapas, paella ou pintxos dans l'Eixample ou le Barri Gòtic — un bar à tapas permet de goûter plusieurs spécialités sans perdre de temps.</p>
+<h4 class="doc-h2">Après-midi : centre historique et la Rambla</h4>
+<ul>
+<li>Barri Gòtic — Plaça Sant Jaume, cathédrale, ruelles médiévales</li>
+<li>La Rambla et le marché de la Boqueria — à visiter plutôt en début d'après-midi</li>
+<li>Front de mer et Port Vell — balade sur les quais avant le retour</li>
+</ul>
+<h4 class="doc-h2">Retour vers le port</h4>
+<p>Prévoyez de commencer le retour environ 1h à 1h15 avant l'embarquement (20 min à pied, 10-15 min en taxi), sans attendre le dernier moment à la Rambla ou au marché.</p>
+<p>Budget indicatif : billet Sagrada Família environ 26 €, café ou tapas 10-15 € par personne, taxi 10-15 €.</p>
+<h3 class="doc-h1">15. Infos pratiques Barcelone</h3>
+<h4 class="doc-h2">Se déplacer</h4>
+<p>Le métro et les bus sont efficaces et économiques ; prévoyez des chaussures confortables, la ville se découvrant beaucoup à pied. Un carnet de 10 trajets de métro coûte autour de 10 €.</p>
+<h4 class="doc-h2">Quand venir</h4>
+<p>Climat méditerranéen, étés chauds et humides, hivers doux (5°C à 28°C selon la saison). Le printemps et l'automne restent les meilleures périodes pour éviter la foule ; octobre est le mois le plus pluvieux.</p>
+<h4 class="doc-h2">Vigilance</h4>
+<p>Comme dans toute grande ville touristique, restez attentif aux pickpockets, notamment sur la Rambla, dans le métro et les lieux très fréquentés.</p>
+<h3 class="doc-h1">La Costa Brava et autour de Barcelone</h3>
+<p>Au nord-est de Barcelone, la province de Gérone regroupe certains des plus beaux villages côtiers d'Espagne (la Costa Brava proprement dite), une ville médiévale remarquable (Gérone), un haut lieu spirituel (Montserrat) et un parc naturel volcanique méconnu (la Garrotxa).</p>
+<h3 class="doc-h1">16. Gérone (Girona)</h3>
+<p>Surnommée la ville des quatre rivières, à 35 km de la Costa Brava et à 1h de la frontière française, Gérone séduit par son centre historique médiéval remarquablement préservé, fondé par les Romains, puis marqué par les communautés juive et musulmane.</p>
+<h4 class="doc-h2">Le quartier juif (El Call)</h4>
+<p>L'un des quartiers juifs les mieux conservés d'Espagne, un labyrinthe de ruelles où il est facile de se perdre avec plaisir, dont l'axe central est la rue Força. Le musée d'Histoire des Juifs y retrace la vie de la communauté hébraïque médiévale en Catalogne (visite environ 1h, audioguide disponible).</p>
+<h4 class="doc-h2">La cathédrale Sainte-Marie</h4>
+<p>Perchée en haut d'un escalier monumental, elle impressionne par son immense nef gothique et abrite la Tapisserie de la Création, joyau du textile roman. Rendue célèbre par son apparition dans Game of Thrones.</p>
+<ul>
+<li>Tarif : 7 € — Horaires : 10h-20h (avril-octobre), 10h-19h le reste de l'année</li>
+</ul>
+<h4 class="doc-h2">Les bains arabes</h4>
+<p>Construits au XIIe siècle en s'inspirant des bains romains : vestiaire, salle de repos et bassin central entourés de fines colonnes romanes.</p>
+<ul>
+<li>Tarif : 3 € (1 € tarif réduit étudiants, retraités, moins de 16 ans)</li>
+</ul>
+<h4 class="doc-h2">Le long de l'Onyar</h4>
+<p>Les maisons colorées suspendues au-dessus de la rivière Onyar, vues depuis le Pont de Pedra ou le Pont de les Peixateries Velles (construit en 1827 par la maison Eiffel), offrent l'un des points de vue les plus photographiés de Catalogne.</p>
+<h4 class="doc-h2">Autres incontournables</h4>
+<ul>
+<li>La Rambla de la Llibertat — rue commerçante à arcades, artère principale de la ville</li>
+<li>Les murailles médiévales (Força Vella) — promenade sur les remparts</li>
+<li>La basilique Sant Feliu et le monastère Sant Pere de Galligants</li>
+<li>Rocambolesc — glacier réputé près du Pont de les Peixateries Velles</li>
+</ul>
+<h4 class="doc-h2">Infos pratiques</h4>
+<p>Aéroport de Gérone-Costa Brava à 12 km du centre. Le centre historique se visite entièrement à pied ; les parkings gratuits sont rares, mieux vaut prévoir un parking payant. Une journée suffit pour l'essentiel.</p>
+<h3 class="doc-h1">17. Cadaqués et le Cap de Creus</h3>
+<p>Souvent désigné comme le plus beau village côtier d'Espagne, Cadaqués séduit par ses maisons blanches aux volets bleus, ses ruelles pavées d'ardoise et la lumière méditerranéenne si particulière qui a attiré nombre d'artistes, à commencer par Salvador Dalí.</p>
+<p class="doc-caption"><em>Cadaqués, souvent désigné comme le plus beau village côtier d'Espagne</em></p>
+<h4 class="doc-h2">La Casa-Museo Salvador Dalí (Port Lligat)</h4>
+<p>À la crique voisine de Port Lligat, la maison où vécut Dalí durant près de 50 ans avec Gala se visite (réservation obligatoire, nombre de places limité) : un dédale de petites pièces excentriques qui reflète bien l'univers de l'artiste.</p>
+<p class="doc-caption"><em>La Casa-Museo Salvador Dalí à Port Lligat</em></p>
+<h4 class="doc-h2">Le Parc naturel du Cap de Creus</h4>
+<p>Point le plus oriental de la péninsule ibérique, ce paysage rocheux façonné par la tramontane cache des dizaines de criques peu fréquentées, avec un contraste saisissant entre le vert de la garrigue et le bleu cristallin de l'eau. Le monastère Sant Pere de Rodes, perché en hauteur, domine le parc.</p>
+<p class="doc-caption"><em>Le Parc naturel du Cap de Creus, paysage rocheux façonné par la tramontane</em></p>
+<h4 class="doc-h2">Autres activités à Cadaqués</h4>
+<ul>
+<li>Église Santa Maria — montée jusqu'au parvis pour une vue panoramique sur le village</li>
+<li>Location de bateau — pour découvrir les criques depuis la mer</li>
+<li>Festival international de musique de Cadaqués — l'été</li>
+<li>Carnaval de Cadaqués — en février</li>
+</ul>
+<h3 class="doc-h1">18. Les villages de la Costa Brava</h3>
+<h4 class="doc-h2">Tossa de Mar</h4>
+<p>Village médiéval fortifié dont la Vila Vella (vieille ville) domine la Platja Gran depuis ses remparts du XIIe siècle — l'un des rares ensembles fortifiés encore intacts sur la côte catalane. On y trouve aussi la villa romaine Els Ametllers, la statue d'Ava Gardner (qui y tourna Pandora en 1951), et le quartier des pêcheurs de Sa Roqueta.</p>
+<p class="doc-caption"><em>Tossa de Mar et les remparts de sa Vila Vella</em></p>
+<h4 class="doc-h2">Lloret de Mar</h4>
+<p>Grande station balnéaire à la vie nocturne animée, mais aussi riche en patrimoine : l'église de Sant Romà (mélange surprenant de gothique tardif et de moderniste coloré), le château de Sant Joan (XIe siècle, aujourd'hui musée), et les jardins de Santa Clotilde, jardin à l'italienne du début du XXe siècle en surplomb de la mer. Le sentier côtier (camí de ronda) entre les deux châteaux offre de superbes points de vue, notamment sur la crique de Sa Boadella.</p>
+<h4 class="doc-h2">Begur</h4>
+<p>Village perché autrefois convoité par les pirates, avec ses tours de guet du XVIe siècle et ses maisons d'indianos (émigrants enrichis à Cuba). De charmantes plages et criques l'entourent : Sa Tuna, Aiguablava, Platja Fonda.</p>
+<h4 class="doc-h2">Calella de Palafrugell</h4>
+<p>Authentique village de pêcheurs aux façades blanches, connu pour ses habaneras (chants de marins) et son festival dédié chaque été. Port Bo en est le cœur historique ; les jardins botaniques de Cap Roig, en surplomb de la mer, valent le détour.</p>
+<h4 class="doc-h2">Pals</h4>
+<p>Village médiéval remarquablement restauré, ruelles de pierre et tours de guet, à quelques kilomètres de la plage.</p>
+<h4 class="doc-h2">Tamariu</h4>
+<p>Village au fort esprit maritime, bateaux de pêche traditionnels tirés sur le sable, restaurants de plage servant riz et poissons frais. Les criques voisines d'Aigua Xelida et Aigua Dolça comptent parmi les plus belles de la région.</p>
+<h4 class="doc-h2">Torroella de Montgrí</h4>
+<p>Village méconnu au riche patrimoine (église gothique de Sant Genís, palais Solterra), dominé par le château de Montgrí (XIIIe siècle) dans son parc naturel.</p>
+<h4 class="doc-h2">Blanes et l'Escala</h4>
+<p>Blanes, porte d'entrée sud de la Costa Brava, est réputée pour son jardin botanique Marimurtra surplombant la mer. L'Escala est connue pour sa plage de Cala Montgó et ses vestiges gréco-romains d'Empúries voisins.</p>
+<h3 class="doc-h1">19. Les plages de la Costa Brava</h3>
+<ul>
+<li>Playa de Fenals (Lloret de Mar), Cala Bona (Tossa de Mar), Cala Montgó (l'Escala)</li>
+<li>Aiguablava et Sa Tuna (Begur), Platja Canadell et El Golfet (Calella de Palafrugell)</li>
+<li>Cala Sant Francesc et Cala Treumal (Blanes), Empuriabrava, Platja de Tamariu</li>
+<li>Cala Taballera, Illa Roja et Cala S'Alguer, parmi les criques les plus sauvages de la côte</li>
+</ul>
+<h3 class="doc-h1">20. Montserrat</h3>
+<p>À un peu plus d'une heure de Barcelone, ce massif montagneux aux formes rocheuses étranges culmine à 1 236 m et abrite l'un des hauts lieux du catholicisme catalan : l'abbaye bénédictine de Montserrat, où quatre-vingts moines vivent encore aujourd'hui. Le sanctuaire conserve la statue de la Vierge Noire (la Moreneta), sainte patronne de la Catalogne, que l'on peut approcher après avoir patienté dans une file dédiée. La Escolania, chœur de jeunes garçons parmi les plus anciens d'Europe, chante quotidiennement en fin de matinée et en fin d'après-midi.</p>
+<p class="doc-caption"><em>L'abbaye de Montserrat, nichée dans un massif rocheux spectaculaire</em></p>
+<p>Le site est aussi un paradis pour les randonneurs : plusieurs sentiers balisés mènent à l'ermitage de Santa Cova (lieu où la statue de la Vierge aurait été découverte) ou au sommet de Sant Jeroni, accessible aussi en funiculaire depuis le monastère.</p>
+<ul>
+<li>Accès : train FGC depuis Barcelone (gare de Plaça Espanya) combiné à un funiculaire ou un téléphérique jusqu'au monastère</li>
+</ul>
+<h3 class="doc-h1">21. Sitges</h3>
+<p>Station balnéaire élégante à moins d'une heure au sud de Barcelone, réputée pour son centre historique pittoresque, son église Santa Tecla dominant la mer depuis un promontoire, et ses neuf plages en enfilade le long du front de mer. Sitges est aussi connue pour son carnaval haut en couleur et sa communauté LGBTQ+ dynamique (quartier de San Sebastian).</p>
+<h3 class="doc-h1">22. Le Parc naturel de la Garrotxa</h3>
+<p>À l'intérieur des terres, entre Gérone et les Pyrénées, cette région volcanique méconnue (même des Français) mérite le détour pour ses villages de caractère et ses paysages uniques façonnés par d'anciens volcans aujourd'hui endormis.</p>
+<h4 class="doc-h2">Olot</h4>
+<p>Ville principale du parc, entourée de volcans éteints et de forêts, bon point de départ pour explorer la région.</p>
+<h4 class="doc-h2">Villages remarquables</h4>
+<ul>
+<li>Castellfollit de la Roca — perché sur une falaise de basalte de plus de 50 m, résultat d'une ancienne coulée de lave</li>
+<li>Besalú — village médiéval traversé par un pont roman du XIIe siècle, avec un quartier juif bien conservé (synagogue, mikvé) et un château en ruines</li>
+<li>Beget — village isolé à l'atmosphère médiévale préservée, église romane Sant Cristòfol du XIIe siècle</li>
+<li>Santa Pau — village pittoresque dominé par son château du XIIIe siècle</li>
+</ul>
+<h4 class="doc-h2">Les volcans à découvrir</h4>
+<ul>
+<li>Volcan Croscat — le plus grand de la péninsule ibérique, paysage lunaire</li>
+<li>Volcan Santa Margarida — cratère bien conservé abritant une église romane du XIIe siècle</li>
+<li>Volcan Montsacopa — cratère accessible à pied près d'Olot, vue sur la ville</li>
+</ul>
+<h4 class="doc-h2">Randonnées</h4>
+<ul>
+<li>Ruta de la Fageda d'en Jordà — traversée d'une hêtraie sur un sol de cendres volcaniques, départ du parking Can Serra</li>
+<li>Ruta dels Castells — villages et châteaux médiévaux à travers les paysages volcaniques</li>
+<li>Ruta del riu Fluvià — le long de la rivière, faune et flore variées</li>
+</ul>
+<h3 class="doc-h1">23. La route des vins et du cava</h3>
+<p>La région du Penedès, à environ 40 minutes au sud-ouest de Barcelone, est le berceau du cava, vin mousseux catalan produit selon la méthode traditionnelle. Plusieurs grandes maisons y proposent visites de caves et dégustations.</p>
+<ul>
+<li>Codorniu — l'une des plus anciennes maisons de cava, cave classée monument historique signée Puig i Cadafalch</li>
+<li>Freixenet et Bodega Familia Torres — autres grands noms du Penedès, visites et dégustations</li>
+<li>Bodegas Perelada (Empordà, Gérone) — dans un château, à combiner avec une excursion en Costa Brava</li>
+</ul>
+<h3 class="doc-h1">24. Infos pratiques Costa Brava et environs</h3>
+<h4 class="doc-h2">Se déplacer</h4>
+<p>La voiture reste le moyen le plus pratique pour explorer les villages de la Costa Brava et de la Garrotxa à son rythme. Sinon, les compagnies de bus Sagalés et Sarfa desservent les principales villes côtières depuis Barcelone et Gérone ; les trains régionaux relient Gérone, Blanes et Barcelone.</p>
+<h4 class="doc-h2">Quand partir</h4>
+<p>La haute saison (juin à août) offre le climat le plus chaud mais aussi la plus forte affluence. Pour profiter des villages et des plages sans la foule, privilégier mai-juin ou septembre-octobre.</p>
+<h4 class="doc-h2">Combiner les visites</h4>
+<p>Depuis Barcelone, Gérone et Montserrat se visitent aisément en excursion d'une journée. Pour la Costa Brava et la Garrotxa, prévoir au moins une nuit sur place afin de profiter de plusieurs villages sans passer le séjour dans les transports.</p>
+<h3 class="doc-h1">25. Mises à jour importantes</h3>
+<p>À savoir : les Fontaines Magiques de Montjuïc sont suspendues depuis 2024 en raison de restrictions d'eau dans la région — vérifiez sur place si elles ont repris avant de prévoir votre soirée autour de la Plaça d'Espanya.</p>
+<p>À savoir : des travaux sont en cours au Camp Nou : seul le musée du FC Barcelone se visite actuellement, pas le stade lui-même.</p>
+<p>À savoir : le Palacio del Flamenco, l'un des grands tablaos de la ville, est actuellement fermé — privilégiez Los Tarantos (Plaça Reial) ou le Tablao Cordobés (Ramblas).</p>
+<p>Le Mercat de Sant Antoni (quartier du même nom), bâtiment moderniste dessiné par Antoni Rovira i Trias, a rouvert en 2018 après 9 ans de travaux : belle structure en fer et verre, toit octogonal, façades néo-classiques et Art nouveau — une alternative moins touristique à la Boqueria.</p>
+<h3 class="doc-h1">26. Restaurants, bars et adresses gourmandes (complément)</h3>
+<h4 class="doc-h2">Autour de la Sagrada Família et Passeig de Gràcia</h4>
+<ul>
+<li>La Paradeta Sagrada Família — on choisit ses fruits de mer sur l'étal avant qu'ils ne soient cuisinés à la minute</li>
+<li>El Nacional — espace gastronomique regroupant plusieurs restaurants sous une magnifique verrière</li>
+<li>El Felino — restaurant italien apprécié près de la Sagrada Família (Carrer de la Marina, 269)</li>
+</ul>
+<h4 class="doc-h2">Quartier gothique et Born</h4>
+<ul>
+<li>El Xampanyet — institution du Born pour des tapas authentiques</li>
+<li>La Fonda — bonne paella près de la Plaça Reial</li>
+<li>Bar Cañete — tapas réputées, quartier gothique</li>
+<li>La Barca del Salamanca — excellentes paellas, au port (Moll de Gregal, 17)</li>
+<li>Carrer Ample — rue prisée des locaux pour bars et restaurants catalans traditionnels, célèbre pour sa « leche de pantera » (boisson locale à base de lait, cannelle, servie depuis les années 1970)</li>
+</ul>
+<h4 class="doc-h2">Montjuïc et Poble Sec</h4>
+<ul>
+<li>Carrer Blai (Poble Sec) — l'une des meilleures rues de pintxos/tapas de la ville, prix indiqués par la couleur des cure-dents</li>
+<li>La Font del Gat — restaurant paisible niché dans les jardins de Montjuïc, cuisine méditerranéenne simple</li>
+</ul>
+<h4 class="doc-h2">Douceurs et souvenirs gourmands</h4>
+<ul>
+<li>Carrer Petritxol — rue emblématique pour les churros/chocolat chaud : Granja Dulcinea, Petritxol et La Pallaresa</li>
+<li>Chocolateria Equador — chocolat artisanal fin, melindros (pâtisserie molle)</li>
+<li>Cereria Subirà — la plus ancienne boutique de Barcelone encore ouverte (bougies artisanales depuis 1761), quartier gothique</li>
+<li>Va de Cuina (Sarrià), Casa Gispert (depuis 1851) et Mantequería Lasière (Eixample) — épiceries fines pour ramener de la cuisine catalane authentique</li>
+<li>Atelier Madre (El Born) — maroquinerie artisanale, cuir tanné à Igualada</li>
+<li>Culinarium — pour trouver un porró, cruche traditionnelle catalane</li>
+<li>Caganer.com — plusieurs boutiques pour dénicher un « caganer », figurine traditionnelle catalane de Noël</li>
+</ul>
+<h3 class="doc-h1">27. Trésors cachés (complément)</h3>
+<ul>
+<li>Nau Bostik (Sant Martí) — ancienne usine de colle reconvertie en galerie de street art à ciel ouvert, terrasse pour un verre</li>
+<li>Cinema Phenomena — cinéma vintage, films en V.O., ambiance rétro</li>
+<li>Sala Montjuïc — cinéma en plein air chaque été (juillet-août) dans l'enceinte du château de Montjuïc, pique-nique autorisé</li>
+<li>Concerts sur le toit de la Casa Batlló — les soirs de printemps et d'été (« Magic Nights »)</li>
+<li>Promenade du fleuve Besòs — 9 km de sentiers et prairies pour se déconnecter de la ville, du parc de Can Zam à la plage de Sant Adrià</li>
+<li>Coco House (Barceloneta) — bols d'açaí à déguster sur la plage</li>
+<li>Rooftop Yoga Barcelona — cours de yoga sur un toit au coucher du soleil ou à la pleine lune</li>
+<li>Terrasses secrètes : Antic Teatre (El Born) et le jardin caché derrière la boutique Olokuti (Gràcia)</li>
+<li>Sant Pau Recinte Modernista — ancien hôpital moderniste près de la Sagrada Família (à partir de 17 €, gratuit les 23 avril et 24 septembre)</li>
+</ul>
+<h3 class="doc-h1">28. Excursions supplémentaires depuis Barcelone</h3>
+<h4 class="doc-h2">Sant Cugat del Vallès</h4>
+<p>À environ 30 minutes de Barcelone (ligne FGC S1, S2 ou S6 depuis Plaça Catalunya, Gràcia ou Provença), cette ville paisible offre une échappée bien plus tranquille que le centre-ville : le monastère de Sant Cugat (XIe siècle, entrée gratuite, magnifique cloître), la Plaça de Sant Pere avec ses tapas (essayez ChiBarri), et El Mercat Vell, marché traditionnel catalan dans une halle moderniste.</p>
+<h4 class="doc-h2">Port de la Selva (Costa Brava)</h4>
+<p>Charmant village de pêcheurs au nord de la Costa Brava (2h de Barcelone, 1h de Gérone), point de départ idéal pour rejoindre à pied le monastère de Sant Pere de Rodes (perché à 520 m d'altitude, entrée 6 €, gratuit le week-end du 9-10 octobre, festival de musique classique en juillet-août) ou pour randonner dans le Parc naturel du Cap de Creus jusqu'aux criques de Cala Tamariua, Cala Cativa et Cala Fornells.</p>
+<ul>
+<li>Restaurants : Cal Pepitu (tapas, terrasse sur le port), Cal Mariner et El Celler (paella, fideuà, arròs negre), L'Escata (poisson ultra frais)</li>
+<li>Où loger : Hôtel Spa Porto Cristo, ou la villa architecturale Sunflower (jusqu'à 10 personnes, piscine à débordement)</li>
+</ul>
+<h4 class="doc-h2">Vermuteria Padró et Les Acàcies — route des vins et du vermouth</h4>
+<ul>
+<li>Vermuteria Padró (Bràfim, 1h de Barcelone) — visite et dégustation de 8 vermouths (22 €, 2h), déjeuner ensuite chez Gastro Botànic &amp; Co, tenu par la même famille</li>
+<li>Les Acàcies (Avinyó, 1h20 de Barcelone) — présentée comme la plus petite cave du monde, DO Pla del Bages (25 €, 1h30) ; à proximité, La Fabrik pour manger et Món Sant Benet (monastère médiéval) pour prolonger la sortie</li>
+<li>Bouquet d'Alella — cave biodynamique près de Barcelone, accessible à vélo avec retour en train</li>
+</ul>
+<h3 class="doc-h1">29. Tossa de Mar (complément restaurants et hébergement)</h3>
+<ul>
+<li>La Lluna — spécialiste des tapas catalanes (seitons en vinagre, empedrat, fideuà)</li>
+<li>Santa Marta — terrasse charmante dans le centre historique, fideuà réputée, crema catalana</li>
+<li>Capri, Tursia (paella et fruits de mer), La Cuina de Can Simón (poisson) et Pizzeria &amp; Brasa Tatarà (cuisine italienne) — autres bonnes adresses</li>
+<li>Où dormir : Camping Pola (près de Cala Pola), hôtels-boutique Mamma Mia, Casa Granados et Hotel Diana, ou Tarull pour un bon rapport qualité-prix</li>
+<li>Plongée : le site le plus réputé autour de Tossa de Mar est Roca Muladera</li>
+</ul>
+<h3 class="doc-h1">30. Gérone (compléments)</h3>
+<p>La mosca (la mouche), biscuit feuilleté au chocolat, est l'emblème de Gérone : selon la légende, saint Narcis aurait fait fuir des soldats français en invoquant toutes les mouches de la ville.</p>
+<ul>
+<li>El cul de la Lleona — tradition locale : embrasser l'arrière-train de la statue de lionne près de l'église Sant Feliu porterait chance de retour à Gérone</li>
+<li>La Malabarista Vermuteria et La Tòria — bien meilleures options que les bars touristiques de la Plaça de la Independència, à 6 min à pied</li>
+<li>Recorda-te'n souvenirs — jolie boutique de souvenirs locaux dans le quartier juif</li>
+<li>El Celler de Can Roca — élu 2e meilleur restaurant du monde par le magazine Restaurant (réservation très à l'avance nécessaire)</li>
+<li>Où loger : Hotel Històric, Apartaments Catedral, Can Cocollona B&amp;B, Girona Catedral, Hôtel Palau de Bellavista, DoubleTree by Hilton Girona</li>
+<li>Le train à grande vitesse relie Barcelone à Gérone en 38 minutes seulement (Estació de Sants)</li>
+</ul>
+<h3 class="doc-h1">31. La Costa Daurada (au sud de Barcelone)</h3>
+<p>Moins connue que la Costa Brava, la Costa Daurada s'étend au sud de Barcelone sur environ 216 km, de Cunit à Alcanar. Elle mérite un détour pour ses plages de sable doré, son patrimoine romain et le parc d'attractions PortAventura.</p>
+<ul>
+<li>Tarragone — capitale de la Costa Daurada : ruines romaines de Tarraco classées UNESCO (amphithéâtre, cirque romain, murailles), cathédrale gothique du XIIe siècle, Balcon de la Méditerranée, vieille ville et plage du Miracle</li>
+<li>Reus — ville natale de Gaudí : Centre Gaudí, Casa Navàs (Domènech i Montaner), Route du Modernisme (près de 80 bâtiments)</li>
+<li>Cambrils — port de pêche réputé pour ses fruits de mer, plages Pavillon bleu, Parc Samà (jardin botanique avec lacs et grottes)</li>
+<li>PortAventura World (Salou) — l'un des plus grands complexes de loisirs d'Europe : PortAventura Park (6 zones thématiques, montagnes russes Shambhala et Dragon Khan), Ferrari Land (Red Force, montagne russe la plus rapide et la plus haute d'Europe) et Caribe Aquatic Park</li>
+<li>L'Ametlla de Mar — village de pêcheurs pittoresque, plages Cala Vidre et Cala Forn, criques préservées</li>
+<li>Le Delta de l'Èbre — réserve naturelle à l'extrême sud (320 km²), flamants roses, rizières (30 % du riz espagnol), balades en bateau dans les canaux</li>
+<li>La Route cistercienne — itinéraire reliant trois monastères cisterciens majeurs : Poblet (le plus grand d'Europe encore habité, classé UNESCO), Santes Creus et Vallbona de les Monges (seul monastère féminin, communauté de religieuses depuis plus de 850 ans)</li>
+</ul>
+<h3 class="doc-h1">32. Rooftops et vie nocturne (complément)</h3>
+<h4 class="doc-h2">Les meilleurs rooftops</h4>
+<ul>
+<li>Ayre Hotel Rosellón — vue exceptionnelle sur la Sagrada Família, Montjuïc et le Tibidabo (Carrer del Rosselló, 390)</li>
+<li>1881 La Terraza de las Indianas — au sommet du Palau de Mar (Musée d'Histoire de Catalogne), le rooftop le plus célèbre de la ville (Plaça de Pau Vila, 3)</li>
+<li>Skybar Grand Central — piscine à débordement, vue à 360° (Via Laietana, 30)</li>
+<li>La Terraza del Claris — hôtel 5 étoiles près de Gràcia, ambiance électro, restaurant gastronomique (Carrer de Pau Claris, 150)</li>
+<li>Terraza Pulitzer — sur la Plaça Catalunya, concerts acoustiques le mercredi</li>
+</ul>
+<h4 class="doc-h2">Bars et clubs incontournables</h4>
+<ul>
+<li>Bar Marsella (El Raval, Carrer de Sant Pau 65) — le plus vieux bar de Barcelone (200 ans), spécialiste de l'absinthe</li>
+<li>Marmalade Bar (Carrer Riera Alta 4-6) — bar à cocktails, ambiance éclectique</li>
+<li>Razzmatazz (Carrer Almogàvers 122) — la plus grande boîte de Barcelone, 5 salles pour tous les styles, ouvre tard (après 2h)</li>
+<li>Dow Jones Bar (Eixample) — les prix des boissons fluctuent comme en bourse</li>
+<li>Opium Mar Club et CDLC — clubs chics donnant sur la plage de la Barceloneta</li>
+<li>Sidecar Factory Club et Jamboree (Plaça Reial) — musique live, concerts</li>
+</ul>
+<h4 class="doc-h2">Quartiers où sortir le soir</h4>
+<ul>
+<li>Poblenou — ancien quartier industriel devenu épicentre créatif et festif, abrite le Razzmatazz</li>
+<li>Eixample — bars étonnants (Dow Jones Bar), clubs salsa/reggaeton (Mojito Club), électro (City Hall)</li>
+<li>El Raval — quartier multiculturel très animé le soir, ancien repaire d'Hemingway, Picasso et Dalí</li>
+<li>Barri Gòtic — clubs comme Catwalk et Jamboree autour de la Plaça Reial</li>
+<li>Port Olímpic — clubs et discothèques en bord de mer (IceBarcelona, Smar)</li>
+</ul>
+<h3 class="doc-h1">33. Excursions supplémentaires sur les traces de Dalí</h3>
+<ul>
+<li>Púbol — petit village médiéval où se trouve le Château de Gala, demeure offerte par Dalí à son épouse ; décoration atypique à son image, à visiter en complément de Tossa de Mar</li>
+<li>Figueres — ville natale de Dalí, où se visitent son Théâtre-Musée dédié et le château de Sant Ferran, la plus grande forteresse d'Europe</li>
+<li>Talamanca (parc naturel de Sant Llorenç del Munt i l'Obac) — village médiéval avec château roman, point de départ apprécié pour la randonnée</li>
+<li>Caldes de Montbui — village aux sources d'eau chaude parmi les plus chaudes d'Europe (74°C), petit centre-ville agréable</li>
+<li>Santa Coloma de Cervelló — abrite la Colonia Güell, œuvre moderniste de Gaudí, notamment sa célèbre crypte</li>
+<li>Sant Sadurní d'Anoia — capitale du cava, entre Barcelone et Tarragone, dégustations dans de petites caves artisanales</li>
+</ul>
+  </div>
 </section>
 
 </main>
@@ -660,7 +1114,42 @@ function renderChecklist(containerId, items, storePrefix, progressId){
   updateProgress();
 }
 
-renderChecklist("before-list", CHECK_BEFORE, "before", "progress-avant");
+// --- Carte de trajet du 24 août (Airbnb -> points d'intérêt) ---
+(function(){
+  const el = document.getElementById("route-map-23-24");
+  if(!el || typeof L === "undefined") return;
+
+  const airbnb = [41.373670, 2.166933];
+
+  const day2 = [
+    {name:"Airbnb (départ)", coord: airbnb},
+    {name:"Casa Batlló", coord:[41.3917, 2.1649]},
+    {name:"Casa Milà (La Pedrera)", coord:[41.3954, 2.1619]},
+    {name:"Palais de la Musique Catalane", coord:[41.3875, 2.1753]},
+  ];
+
+  const map = L.map(el, {scrollWheelZoom:false}).setView(airbnb, 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; contributeurs OpenStreetMap'
+  }).addTo(map);
+
+  function numIcon(n, cls){
+    return L.divIcon({
+      className: "",
+      html: '<div class="num-icon' + (cls?' '+cls:'') + '">' + n + '</div>',
+      iconSize: [24,24], iconAnchor:[12,12]
+    });
+  }
+
+  day2.forEach((p,i)=>{
+    L.marker(p.coord, {icon: numIcon(i+1, "day2")}).addTo(map).bindPopup(p.name);
+  });
+  L.polyline(day2.map(p=>p.coord), {color:"#d98a2b", weight:3, opacity:0.8}).addTo(map);
+
+  map.fitBounds(day2.map(p=>p.coord), {padding:[24,24]});
+})();
+
 
 const packContainer = document.getElementById("pack-list");
 CHECK_PACK.forEach(group=>{
